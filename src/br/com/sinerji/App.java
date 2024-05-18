@@ -17,6 +17,9 @@ public class App {
 		popularCargos();
 		popularFuncionarios();
 		popularVendas();
+		
+		double salarioeBeneficio = getSalarioBeneficio(funcionarios,"12","2024");
+		System.out.println("Salario + Beneficio: " + salarioeBeneficio);
 	}
 	
 	private static void popularCargos(){
@@ -74,7 +77,22 @@ public class App {
 		return retorno;
 	}
 	
-	/*Um método que receba uma lista de funcionários, mês e ano e retorne o valor total
-	pago (salário e benefício) a esses funcionários no mês.*/
+	/*
+	Um método que receba uma lista de funcionários, mês e ano e retorne o valor total
+	pago (salário e benefício) a esses funcionários no mês.
+	*/
+	private static double getSalarioBeneficio(List<Funcionario> funcionarios, String mes, String ano) {
+		double salario = 0;
+		double beneficio = 0;
+		String mesContratacao = null;
+		for(Funcionario funcionario : funcionarios) {
+			salario += funcionario.getCargo().getSalario();
+			mesContratacao = funcionario.getContratacao().substring(0,1);
+			if(mes.equals(mesContratacao)) {
+				beneficio += funcionario.getCargo().getSalario() * (funcionario.getCargo().getBeneficio()/100);
+			}
+		}
+		return salario + beneficio;
+	}
 
 }
