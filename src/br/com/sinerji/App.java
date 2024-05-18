@@ -18,18 +18,18 @@ public class App {
 		popularFuncionarios();
 		popularVendas();
 		
-		double salarioeBeneficio = getSalarioBeneficio(funcionarios,"12","2024");
-		System.out.println("Salario + Beneficio: " + salarioeBeneficio);
+		double salarioeBeneficio = getSalarioBeneficio(funcionarios,"12/2021");
+		System.out.println("Salario + Anuidade + Beneficio: " + salarioeBeneficio);
 	}
 	
-	private static void popularCargos(){
+	static void popularCargos(){
 		cargos = new ArrayList<Cargo>();
 		cargos.add(new Cargo("Secretário",7000,1000,20));
 		cargos.add(new Cargo("Vendedor",12000,1800,30));
 		cargos.add(new Cargo("Gerente",20000,3000,0));
 	}
 	
-	private static void popularFuncionarios(){
+	static void popularFuncionarios(){
 		funcionarios = new ArrayList<Funcionario>();
 		funcionarios.add(new Funcionario("Jorge Carvalho",getCargo("Secretário"),"01/2018"));
 		funcionarios.add(new Funcionario("Maria Souza",getCargo("Secretário"),"12/2015"));
@@ -39,7 +39,7 @@ public class App {
 		funcionarios.add(new Funcionario("Bento Albino",getCargo("Gerente"),"03/2014"));
 	}
 	
-	private static void popularVendas(){
+	static void popularVendas(){
 		vendas = new ArrayList<Venda>();
 		
 		vendas.add(new Venda(getFuncionario("Ana Silva"),"12/2021",5200));
@@ -55,7 +55,7 @@ public class App {
 		vendas.add(new Venda(getFuncionario("João Mendes"),"04/2022",6500));
 	}
 	
-	private static Cargo getCargo(String nome) {
+	static Cargo getCargo(String nome) {
 		Cargo retorno = null;
 		for(Cargo cargo : cargos) {
 			if(cargo.getNome().equals(nome)) {
@@ -66,7 +66,7 @@ public class App {
 		return retorno;
 	}
 	
-	private static Funcionario getFuncionario(String nome) {
+	static Funcionario getFuncionario(String nome) {
 		Funcionario retorno = null;
 		for(Funcionario funcionario : funcionarios) {
 			if(funcionario.getNome().equals(nome)) {
@@ -81,18 +81,41 @@ public class App {
 	Um método que receba uma lista de funcionários, mês e ano e retorne o valor total
 	pago (salário e benefício) a esses funcionários no mês.
 	*/
-	private static double getSalarioBeneficio(List<Funcionario> funcionarios, String mes, String ano) {
+	static double getSalarioBeneficio(List<Funcionario> funcionarios, String mesAno) {
+		double total = 0;
 		double salario = 0;
+		double anuidade = 0;
 		double beneficio = 0;
-		String mesContratacao = null;
 		for(Funcionario funcionario : funcionarios) {
-			salario += funcionario.getCargo().getSalario();
-			mesContratacao = funcionario.getContratacao().substring(0,1);
-			if(mes.equals(mesContratacao)) {
-				beneficio += funcionario.getCargo().getSalario() * (funcionario.getCargo().getBeneficio()/100);
+			//salario
+			salario = funcionario.getCargo().getSalario();
+			//anuidade
+			anuidade = 0;
+			if( (mesAno!=funcionario.getContratacao())&&  
+				(mesAno.subSequence(0,1).equals(funcionario.getContratacao().substring(0,1))) ) {
+				anuidade = funcionario.getCargo().getAnuidade();
+			}
+			//beneficio
+			beneficio = 0;
+			if(funcionario.getCargo().getNome().equals("Secretário")) {
+				beneficio = funcionario.getCargo().getSalario() * (funcionario.getCargo().getBeneficio() / 100);
+			}else if(funcionario.getCargo().getNome().equals("Vendedor")) {
+				beneficio = getValorTotalVendas(funcionario,mesAno) * (funcionario.getCargo().getBeneficio() / 100);
+			}
+			total += salario + anuidade + beneficio;
+		}
+		return total;
+	}
+	
+	static double getValorTotalVendas(Funcionario funcionario, String mesAno) {
+		double retorno = 0;
+		for( Venda venda : vendas) {
+			if(venda.getVendedor().equals(funcionario)&&venda.getMes().equals(mesAno)) {
+				retorno = venda.getValor();
+				break;
 			}
 		}
-		return salario + beneficio;
+		return retorno;
 	}
 
 }
