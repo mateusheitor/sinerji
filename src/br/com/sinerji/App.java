@@ -13,29 +13,30 @@ public class App {
 	private static List<Funcionario> funcionarios;
 	private static List<Venda> vendas;
 	
+	static final String MES_ANO = "01/2022";
+	
 	public static void main(String[] args) {
 		popularCargos();
 		popularFuncionarios();
 		popularVendas();
 		
-		double salarioAnuidadeBeneficio = getSalarioAnuidadeBeneficio(funcionarios,"12/2021");
+		double salarioAnuidadeBeneficio = getSalarioAnuidadeBeneficio(funcionarios,MES_ANO);
 		System.out.println("Salario + Anuidade + Beneficio: " + salarioAnuidadeBeneficio);
 		
-		double salario = getSalario(funcionarios,"12/2021");
+		double salario = getSalario(funcionarios,MES_ANO);
 		System.out.println("Salario: " + salario);
 		
-		double beneficio = getBeneficio(funcionarios,"12/2021");
+		double beneficio = getBeneficio(funcionarios,MES_ANO);
 		System.out.println("Beneficio: " + beneficio);
 		
-		Funcionario funcionarioComSalarioMaisAlto = getSalarioMaisAltoNoMes(funcionarios,"12/2021"); 
+		Funcionario funcionarioComSalarioMaisAlto = getSalarioMaisAltoNoMes(funcionarios,MES_ANO); 
 		System.out.println("Funcionario com o salario mais alto: " + funcionarioComSalarioMaisAlto.getNome());
 		
-		Funcionario funcionarioComBeneficioMaisAlto = getBeneficioMaisAlto(funcionarios,"12/2021"); 
+		Funcionario funcionarioComBeneficioMaisAlto = getBeneficioMaisAlto(funcionarios,MES_ANO); 
 		System.out.println("Funcionario com o beneficio mais alto: " + funcionarioComBeneficioMaisAlto.getNome());
 		
-		Funcionario vendedor = getVendedorQueMaisVendeu(funcionarios,"12/2021"); 
+		Funcionario vendedor = getVendedorQueMaisVendeu(funcionarios,MES_ANO); 
 		System.out.println("Funcionario que mais vendeu no mes: " + vendedor.getNome());
-		
 	}
 	
 	static void popularCargos(){
@@ -119,7 +120,7 @@ public class App {
 			//anuidade
 			anuidade = 0;
 			if( (mesAno!=funcionario.getContratacao())&&  
-				(mesAno.subSequence(0,1).equals(funcionario.getContratacao().substring(0,1))) ) {
+				(mesAno.substring(0,2).equals(funcionario.getContratacao().substring(0,2))) ) {
 				anuidade = funcionario.getCargo().getAnuidade();
 			}
 			//beneficio
@@ -148,7 +149,7 @@ public class App {
 			//anuidade
 			anuidade = 0;
 			if( (mesAno!=funcionario.getContratacao())&&  
-				(mesAno.subSequence(0,1).equals(funcionario.getContratacao().substring(0,1))) ) {
+				(mesAno.substring(0,2).equals(funcionario.getContratacao().substring(0,2))) ) {
 				anuidade = funcionario.getCargo().getAnuidade();
 			}
 			total += salario + anuidade;
@@ -202,7 +203,7 @@ public class App {
 			//anuidade
 			anuidade = 0;
 			if( (mesAno!=funcionario.getContratacao())&&  
-				(mesAno.subSequence(0,1).equals(funcionario.getContratacao().substring(0,1))) ) {
+				(mesAno.substring(0,2).equals(funcionario.getContratacao().substring(0,2))) ) {
 				anuidade = funcionario.getCargo().getAnuidade();
 			}
 			if((salario+anuidade)>salarioMaisAlto) {
